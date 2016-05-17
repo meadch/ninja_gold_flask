@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from random import randrange
 app = Flask(__name__)
-
+app.secret_key = "goldgoldgold"
 search_settings = {
     'farm': {'min': 10 , 'max': 20},
     'cave': {'min': 5, 'max': 10},
@@ -11,6 +11,9 @@ search_settings = {
 
 @app.route('/', methods=["GET"])
 def index():
+    if not 'total_gold' in session:
+        session['total_gold'] = 0
+    
     return render_template('index.html')
 
 @app.route('/get_coins', methods=["POST"])
@@ -21,6 +24,11 @@ def gold_search():
 
     # generate random integer between particular range
     rand_gold = randrange(range_min, range_max + 1)
+
+    session['total_gold'] += rand_gold
+
+    print "TOTAL GOLD: ", session['total_gold']
+
 
 
     # Figure out gold logic according to the location
